@@ -1,7 +1,7 @@
 ARG NODE_VERSION=24.13.1
 FROM node:${NODE_VERSION}-slim
 
-ARG PI_VERSION=0.54.1
+ARG PI_VERSION=0.54.2
 
 # System tools pi commonly needs
 RUN apt-get update && apt-get install -y --no-install-recommends \
