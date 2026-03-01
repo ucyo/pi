@@ -149,6 +149,8 @@ jobs:
             org.opencontainers.image.source=https://github.com/ucyo/pi
             pi.version=${{ steps.pi.outputs.version }}
             node.version=${{ steps.node.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # ------------------------------------------------------------------ #
       # 7. Commit the updated Dockerfile back to main
