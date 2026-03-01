@@ -109,6 +109,22 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Generate Docker tags
+        if: steps.changed.outputs.any == 'true'
+        id: tags
+        run: |
+          PI_VERSION="${{ steps.pi.outputs.version }}"
+          NODE_VERSION="${{ steps.node.outputs.version }}"
+          
+          # Extract major.minor from pi version (e.g., 0.55.3 -> 0.55)
+          PI_MAJOR_MINOR=$(echo "$PI_VERSION" | cut -d. -f1,2)
+          
+          # Generate build date tag (YYYY-MM-DD format)
+          BUILD_DATE=$(date -u +%Y-%m-%d)
+          
+          echo "pi_major_minor=$PI_MAJOR_MINOR" >> "$GITHUB_OUTPUT"
+          echo "build_date=$BUILD_DATE" >> "$GITHUB_OUTPUT"
+
       - name: Build and push image
         if: steps.changed.outputs.any == 'true'
         uses: docker/build-push-action@v6
@@ -121,7 +137,18 @@ jobs:
             PI_VERSION=${{ steps.pi.outputs.version }}
           tags: |
             ucyo/pi:latest
+            ucyo/pi:${{ steps.pi.outputs.version }}
+            ucyo/pi:${{ steps.tags.outputs.pi_major_minor }}
             ucyo/pi:node${{ steps.node.outputs.version }}-pi${{ steps.pi.outputs.version }}
+            ucyo/pi:${{ steps.tags.outputs.build_date }}
+          labels: |
+            org.opencontainers.image.title=pi-coding-agent
+            org.opencontainers.image.description=Containerized pi coding agent with Node.js and common tools
+            org.opencontainers.image.version=${{ steps.pi.outputs.version }}
+            org.opencontainers.image.created=${{ steps.tags.outputs.build_date }}
+            org.opencontainers.image.source=https://github.com/ucyo/pi
+            pi.version=${{ steps.pi.outputs.version }}
+            node.version=${{ steps.node.outputs.version }}
 
       # ------------------------------------------------------------------ #
       # 7. Commit the updated Dockerfile back to main
