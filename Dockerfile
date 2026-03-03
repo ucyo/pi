@@ -7,6 +7,8 @@ ARG PI_VERSION=0.55.4
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
+    make \ 
+    procps \
     git \
     jq \
     ripgrep \
