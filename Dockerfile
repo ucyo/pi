@@ -19,4 +19,4 @@ RUN npm install -g @mariozechner/pi-coding-agent@${PI_VERSION}
 
 WORKDIR /workspace
 
-ENTRYPOINT ["pi"]
+CMD ["pi"]
