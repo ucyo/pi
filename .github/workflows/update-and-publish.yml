@@ -5,6 +5,9 @@ on:
     - cron: "0 4 * * *" # daily at 04:00 UTC
   workflow_dispatch: # allow manual runs
 
+env:
+  PI_NPM_URL: https://registry.npmjs.org/@earendil-works/pi-coding-agent/latest
+
 jobs:
   check-and-publish:
     runs-on: ubuntu-latest
@@ -36,8 +39,7 @@ jobs:
       - name: Get latest pi version
         id: pi
         run: |
-          VERSION=$(curl -fsSL https://registry.npmjs.org/@mariozechner/pi-coding-agent/latest \
-            | jq -r '.version')
+          VERSION=$(curl -fsSL $PI_NPM_URL | jq -r '.version')
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Resolved pi version: $VERSION"
 
@@ -115,13 +117,13 @@ jobs:
         run: |
           PI_VERSION="${{ steps.pi.outputs.version }}"
           NODE_VERSION="${{ steps.node.outputs.version }}"
-          
+
           # Extract major.minor from pi version (e.g., 0.55.3 -> 0.55)
           PI_MAJOR_MINOR=$(echo "$PI_VERSION" | cut -d. -f1,2)
-          
+
           # Generate build date tag (YYYY-MM-DD format)
           BUILD_DATE=$(date -u +%Y-%m-%d)
-          
+
           echo "pi_major_minor=$PI_MAJOR_MINOR" >> "$GITHUB_OUTPUT"
           echo "build_date=$BUILD_DATE" >> "$GITHUB_OUTPUT"
 

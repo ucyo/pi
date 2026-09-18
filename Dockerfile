@@ -11,7 +11,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
-    make \ 
+    make \
     procps \
     git \
     jq \
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Install pi
-RUN npm install -g @mariozechner/pi-coding-agent@${PI_VERSION}
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@{PI_VERSION}
 
 WORKDIR /workspace
 
