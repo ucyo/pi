@@ -1,7 +1,7 @@
 ARG NODE_VERSION=24.21.0
 FROM node:${NODE_VERSION}-slim
 
-ARG PI_VERSION=0.73.1
+ARG PI_VERSION=0.85.0
 
 # Add uv
 
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && update-ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Install pi
-RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent@{PI_VERSION}
+RUN npm install -g --ignore-scripts "@earendil-works/pi-coding-agent@${PI_VERSION}"
 
 WORKDIR /workspace
 
